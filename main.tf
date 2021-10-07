@@ -207,6 +207,17 @@ resource "oci_load_balancer" "lb1" {
   }
 }
 
+resource "oci_load_balancer" "lb2" {
+  shape          = "100Mbps"
+  compartment_id = var.compartment_ocid
+
+  subnet_ids = [
+    oci_core_subnet.subnet1.id,
+    oci_core_subnet.subnet2.id,
+  ]
+
+  display_name = "lb2"
+}
 
 variable "load_balancer_shape_details_maximum_bandwidth_in_mbps" {
   default = 100
