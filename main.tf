@@ -135,28 +135,6 @@ resource "oci_core_instance" "webserver1" {
   }
 }
 
-variable "user-data" {
-  default = <<EOF
-#!/bin/bash -x
-echo 'Install apache'
-sudo yum install httpd -y
-sudo apachectl start
-echo 'Enable apache'
-sudo systemctl enable httpd
-echo 'Insert firewall rules'
-sudo firewall-cmd --zone=public --add-service=http
-sudo firewall-cmd --permanent --zone=public --add-service=http
-echo 'Install app'
-cd /var/www/html/
-sudo wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/u8j40_AS-7pRypC5boQT24w5QFPDTy-0j27BWBOfmsxbERTiuDtJQBIqfcsOH81F/n/idqfa2z2mift/b/bootcamp-oci/o/oci-f-handson-modulo-compute-website-files.zip
-sudo unzip oci-f-handson-modulo-compute-website-files.zip
-echo 'Insert permissions'
-sudo chown -R apache:apache /var/www/html
-echo 'Delete zip file'
-sudo rm -rf oci-f-handson-modulo-compute-website-files.zip
-EOF
-}
-
 resource "oci_core_instance" "webserver2" {
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
@@ -180,3 +158,24 @@ resource "oci_core_instance" "webserver2" {
   }
 }
 
+variable "user-data" {
+  default = <<EOF
+#!/bin/bash -x
+echo 'Install apache'
+sudo yum install httpd -y
+sudo apachectl start
+echo 'Enable apache'
+sudo systemctl enable httpd
+echo 'Insert firewall rules'
+sudo firewall-cmd --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-service=http
+echo 'Install app'
+cd /var/www/html/
+sudo wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/u8j40_AS-7pRypC5boQT24w5QFPDTy-0j27BWBOfmsxbERTiuDtJQBIqfcsOH81F/n/idqfa2z2mift/b/bootcamp-oci/o/oci-f-handson-modulo-compute-website-files.zip
+sudo unzip oci-f-handson-modulo-compute-website-files.zip
+echo 'Insert permissions'
+sudo chown -R apache:apache /var/www/html
+echo 'Delete zip file'
+sudo rm -rf oci-f-handson-modulo-compute-website-files.zip
+EOF
+}
