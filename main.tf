@@ -278,13 +278,6 @@ resource "oci_load_balancer_backend" "lb-be2" {
   weight           = 1
 }
 
-resource "oci_load_balancer_rule_set" "test_rule_set" {
-  items {
-    action = "ADD_HTTP_REQUEST_HEADER"
-    header = "example_header_name"
-    value  = "example_header_value"
-  }
-
 resource "oci_load_balancer_hostname" "test_hostname1" {
   #Required
   hostname         = "app.example.com"
