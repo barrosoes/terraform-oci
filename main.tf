@@ -224,12 +224,11 @@ resource "oci_load_balancer" "lb1" {
     id = "${oci_core_public_ip.test_reserved_ip.id}"
   }
 
+#shape_details {
+#      maximun_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
+#      minimun_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
+#    }
 }
-
-shape_details {
-      maximun_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
-      minimun_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
-    }
 
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
