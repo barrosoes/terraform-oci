@@ -212,8 +212,7 @@ resource "oci_load_balancer" "lb2" {
   compartment_id = var.compartment_ocid
 
   subnet_ids = [
-    oci_core_subnet.subnet1.id,
-    oci_core_subnet.subnet2.id,
+    oci_core_subnet.tcb_subnet.id,
   ]
 
   display_name = "lb2"
