@@ -201,6 +201,13 @@ variable "load_balancer_mix_band" {
   default     = "10"
 }
 
+variable "load_balancer_shape_details_maximum_bandwidth_in_mbps" {
+  default = 10
+}
+
+variable "load_balancer_shape_details_minimum_bandwidth_in_mbps" {
+  default = 10
+}
 
 /* Load Balancer */
 
