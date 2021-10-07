@@ -215,22 +215,6 @@ resource "oci_load_balancer" "lb" {
     }
 }
 
-resource "oci_load_balancer_backend_set" "lb-backend" {
-  health_checker {
-    interval_ms		= "10000"
-    port		= "80"
-    protocol            = "HTTP"
-    response_body_regex = ".*"
-    retries		= "3"
-    return_code		= "200"
-    timeout_in_millis	= "3000"
-    url_path            = "/"
-  }
-  load_balancer_id = oci_load_balancer.Load_Balancer.id
-  name		   = "lb-backend"
-  policy           = "ROUND_ROBIN"
-}
-
 resource "oci_load_balancer_backend" "lb-be1" {
   backendset_name  = oci_load_balancer_backend_set.lb-backend.name
   backup           = false
@@ -240,6 +224,33 @@ resource "oci_load_balancer_backend" "lb-be1" {
   port             = 80
   offline          = false
   weight           = 1
+}
+
+resource "oci_load_balancer_backend" "lb-be2" {
+  backendset_name  = oci_load_balancer_backend_set.lb-backend.name
+  backup           = false
+  drain            = false
+  load_balancer_id = oci_load_balancer.lb.id
+  ip_address       = oci_core_instance.webserver2.private_ip
+  port             = 80
+  offline          = false
+  weight           = 1
+}
+
+resource "oci_load_balancer_backend_set" "lb-backend" {
+  health_checker {
+    interval_ms         = "10000"
+    port                = "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    retries             = "3"
+    return_code         = "200"
+    timeout_in_millis   = "3000"
+    url_path            = "/"
+  }
+  load_balancer_id = oci_load_balancer.Load_Balancer.id
+  name             = "lb-backend"
+  policy           = "ROUND_ROBIN"
 }
 
 resource "oci_load_balancer_listener" "lb-listener" {
