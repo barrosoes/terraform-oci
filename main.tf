@@ -231,12 +231,6 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
     response_body_regex = ".*"
     url_path            = "/"
   }
-
-resource "oci_load_balancer_hostname" "test_hostname1" {
-  #Required
-  hostname         = "app.example.com"
-  load_balancer_id = oci_load_balancer.lb1.id
-  name             = "hostname1"
 }
 
 resource "oci_load_balancer_listener" "lb-listener1" {
