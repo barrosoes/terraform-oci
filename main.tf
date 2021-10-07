@@ -195,12 +195,12 @@ EOF
 
 variable "load_balancer_min_band" {
   description = "Load Balancer Min Band"
-  default     = "10"
+  default     = 10
 }
 
-variable "load_balancer_mix_band" {
+variable "load_balancer_max_band" {
   description = "Load Balancer Max Band"
-  default     = "10"
+  default     = 10
 }
 
 
