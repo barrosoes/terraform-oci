@@ -202,7 +202,7 @@ resource "oci_load_balancer" "lb1" {
   ip_network        = "/Compute-${var.domain}/${var.user}/ipnet1"
 }
 
-resource "<strong>opc_lbaas_server_pool</strong>" "serverpool1" {
+resource "opc_lbaas_server_pool" "serverpool1" {
   load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
   name          = "serverpool1"
   servers  = ["10.1.20.224:80", "10.1.20.103:80"]
