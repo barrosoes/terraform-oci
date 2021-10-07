@@ -193,6 +193,17 @@ EOF
 
 /* Load Balancer */
 
+variable "load_balancer_min_band" {
+  description = "Load Balancer Min Band"
+  default     = "10"
+}
+
+variable "load_balancer_mix_band" {
+  description = "Load Balancer Max Band"
+  default     = "10"
+}
+
+
 resource "oci_load_balancer" "lb1" {
   shape          = "flexible"
   compartment_id = var.compartment_ocid
@@ -204,6 +215,10 @@ resource "oci_load_balancer" "lb1" {
   display_name               = "lb1"
   is_private                 = true
  # network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
+  shape_details {
+     maximun_bandwidth_in_mbps = var.load_balancer_max_band
+     minimun_bandwidth_in_mbps = var.load_balancer_min_band
+    }
 }
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
