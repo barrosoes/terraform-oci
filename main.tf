@@ -280,11 +280,11 @@ resource "oci_load_balancer_listener" "lb-listener1" {
   }
 }
 
-#resource "oci_core_network_security_group" "test_network_security_group" {
-  #Required
-#  compartment_id = var.compartment_ocid
-#  vcn_id         = oci_core_vcn.tcb_vcn.id
-#}
+resource "oci_core_network_security_group" "test_network_security_group" {
+  Required
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.tcb_vcn.id
+}
 
 output "lb_private_ip" {
   value = [oci_load_balancer.lb1.ip_address_details]
