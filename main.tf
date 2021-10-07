@@ -52,6 +52,13 @@ resource "oci_core_virtual_network" "tcb_vcn" {
   dns_label      = "tcbvcn"
 }
 
+resource "oci_core_vcn" "vcn1" {
+  cidr_block     = "10.1.0.0/16"
+  compartment_id = var.compartment_ocid
+  display_name   = "vcn1"
+  dns_label      = "vcn1"
+}
+
 resource "oci_core_subnet" "tcb_subnet" {
   cidr_block        = "10.1.20.0/24"
   display_name      = "tcbSubnet"
@@ -282,7 +289,7 @@ resource "oci_load_balancer_listener" "lb-listener1" {
 
 resource "oci_core_network_security_group" "test_network_security_group" {
   compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.tcb_vcn.id
+  vcn_id         = oci_core_vcn.vcn1.id
 }
 
 output "lb_private_ip" {
