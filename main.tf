@@ -268,25 +268,3 @@ resource "oci_load_balancer_backend" "lb-be2" {
   offline          = false
   weight           = 1
 }
-
-  items {
-    action      = "ALLOW"
-    description = "example vcn ACL"
-
-    conditions {
-      attribute_name  = "SOURCE_VCN_ID"
-      attribute_value = oci_core_vcn.tcb_vcn.id
-    }
-
-    conditions {
-      attribute_name  = "SOURCE_VCN_IP_ADDRESS"
-      attribute_value = "10.1.0.0/16"
-    }
-  }
-
-  items {
-    action                         = "HTTP_HEADER"
-    are_invalid_characters_allowed = true
-    http_large_header_size_in_kb   = 8
-  }
-
