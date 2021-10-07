@@ -193,20 +193,6 @@ EOF
 
 /* Load Balancer */
 
-resource "oci_load_balancer" "lb1" {
-  shape          = "100Mbps"
-  compartment_id = var.compartment_ocid
-
-  subnet_ids = [
-    oci_core_subnet.tcb_subnet.id,
-  ]
-
-  display_name = "lb1"
-  reserved_ips {
-    id = "${oci_core_public_ip.test_reserved_ip.id}"
-  }
-}
-
 resource "oci_load_balancer_backend_set" "lb-bes1" {
   name             = "lb-bes1"
   load_balancer_id = oci_load_balancer.lb1.id
