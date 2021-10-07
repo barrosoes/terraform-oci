@@ -197,6 +197,7 @@ resource "oci_load_balancer" "lb1" {
   name        = "lb1"
   region      = "sa-saopaulo-1"
   description = "Meu Load Balancer"
+  policy      = "ROUND_ROBIN"
   scheme      = "INTERNET_FACING"
   permitted_methods = ["GET", "HEAD", "POST"]
   ip_network        = "/Compute-${var.domain}/${var.user}/ipnet1"
@@ -225,14 +226,6 @@ resource "oci_load_balancer_listener" "listener1" {
   policies = [
     "${opc_lbaas_policy.load_balancing_mechanism_policy.uri}",
   ]
-}
-
-resource "opc_lbaas_policy" "load_balancing_mechanism_policy" {
-  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
-  name          = "roundrobin"
-  load_balancing_mechanism_policy {
-    load_balancing_mechanism = "round_robin"
-  }
 }
 
 output "canonical_host_name" {
