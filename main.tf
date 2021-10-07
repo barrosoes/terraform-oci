@@ -233,6 +233,19 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
   }
 }
 
+resource "oci_load_balancer_hostname" "webserver1" {
+  #Required
+  hostname         = "app.example.com"
+  load_balancer_id = oci_load_balancer.lb1.id
+  name             = "hostname1"
+}
+
+resource "oci_load_balancer_hostname" "webserver2" {
+  #Required
+  hostname         = "app2.example.com"
+  load_balancer_id = oci_load_balancer.lb1.id
+  name
+
 resource "oci_load_balancer_listener" "lb-listener1" {
   load_balancer_id         = oci_load_balancer.lb1.id
   name                     = "http"
