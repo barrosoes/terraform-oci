@@ -254,8 +254,8 @@ resource "oci_load_balancer_backend_set" "lb-backend-s" {
 }
 
 resource "oci_load_balancer_listener" "lb-listener" {
-  default_backend_set_name = [oci_load_balancer_backend_set.lb-backend-s.name]
-  load_balancer_id         = [oci_load_balancer.web-lb.id]
+  default_backend_set_name = oci_load_balancer_backend_set.lb-backend-s.name
+  load_balancer_id         = oci_load_balancer.web-lb.id
   name                     = "lb-listener"
   hostname_names           = []
   port                     = 80
