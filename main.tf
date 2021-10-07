@@ -219,7 +219,7 @@ resource "oci_load_balancer" "lb1" {
 #shape_details {
 #      maximun_bandwidth_in_mbps = 10
 #      minimun_bandwidth_in_mbps = 10
-#    }
+##  }
 }
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
