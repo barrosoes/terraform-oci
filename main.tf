@@ -200,7 +200,6 @@ resource "oci_load_balancer" "lb1" {
   ]
 
   display_name = "lb-webservers"
-  network_security_group_ids = [oci_core_network_security_group.lb1WebSecurityGroup.id]
   reserved_ips {
     id = "${oci_core_public_ip.test_reserved_ip.id}"
   }  
