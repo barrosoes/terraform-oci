@@ -125,15 +125,16 @@ resource "oci_core_instance" "webserver1" {
     hostname_label   = "webserver1"
   }
 
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+    user_data = base64encode(var.user-data)
+  }
+  
   source_details {
     source_type = "image"
     source_id   = var.images[var.region]
   }
 
-  metadata = {
-    ssh_authorized_keys = var.ssh_public_key
-    user_data = base64encode(var.user-data)
-  }
 }
 
 resource "oci_core_instance" "webserver2" {
@@ -149,14 +150,14 @@ resource "oci_core_instance" "webserver2" {
     hostname_label   = "webserver2"
   }
 
-  source_details {
-    source_type = "image"
-    source_id   = var.images[var.region]
-  }
-
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
     user_data = base64encode(var.user-data)
+  }
+  
+  source_details {
+    source_type = "image"
+    source_id   = var.images[var.region]
   }
 }
 
