@@ -244,13 +244,6 @@ resource "oci_load_balancer_hostname" "webserver2" {
   load_balancer_id = oci_load_balancer.lb1.id
   name		   = "hostname2"	
 
-resource "oci_load_balancer_rule_set" "test_rule_set" {
-  items {
-    action = "ADD_HTTP_REQUEST_HEADER"
-    header = "example_header_name"
-    value  = "example_header_value"
-  }
-
 resource "oci_load_balancer_listener" "lb-listener1" {
   load_balancer_id         = oci_load_balancer.lb1.id
   name                     = "http"
@@ -258,7 +251,6 @@ resource "oci_load_balancer_listener" "lb-listener1" {
   hostname_names           = [oci_load_balancer_hostname.webserver1.name, oci_load_balancer_hostname.webserver2.name]
   port                     = 80
   protocol                 = "HTTP"
-  rule_set_names           = [oci_load_balancer_rule_set.test_rule_set.name]
 
   connection_configuration {
     idle_timeout_in_seconds = "2"
