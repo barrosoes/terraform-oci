@@ -193,41 +193,45 @@ EOF
 
 /* Load Balancer */
 
-resource "oci_load_balancer_backend" "lb-be1" {
-  load_balancer_id = oci_load_balancer.lb1.id
-  backendset_name  = oci_load_balancer_backend_set.webserver1.name
-  ip_address       = oci_core_instance.webserver1.private_ip
-  port             = 80
-  backup           = false
-  drain            = false
-  offline          = false
-  weight           = 1
+resource "<strong>opc_lbaas_load_balancer</strong>" "lb1" {
+  name        = "lb1"
+  region      = "sa-saopaulo-1"
+  description = "Meu Load Balancer"
+  scheme      = "INTERNET_FACING"
+  permitted_methods = ["GET", "HEAD", "POST"]
+  ip_network        = "/Compute-${var.domain}/${var.user}/ipnet1"
 }
 
-resource "oci_load_balancer_hostname" "test_hostname1" {
-  #Required
-  hostname         = "app.example.com"
-  load_balancer_id = oci_load_balancer.lb-be1.id
-  name             = "hostname1"
+resource "<strong>opc_lbaas_server_pool</strong>" "serverpool1" {
+  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
+  name          = "serverpool1"
+  servers  = ["10.1.20.224:80", "10.1.20.103:80"]
+  vnic_set = "/Compute-${var.domain}/${var.user}/vnicset1"
 }
 
-resource "oci_load_balancer_hostname" "test_hostname2" {
-  #Required
-  hostname         = "app2.example.com"
-  load_balancer_id = oci_load_balancer.lb-be1.id
-  name             = "hostname2"
+resource "<strong>opc_lbaas_listener</strong>" "listener1" {
+  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
+  name          = "http-listener"
+  balancer_protocol = "HTTP"
+  port              = 80
+  virtual_hosts     = [ "${opc_lbaas_load_balancer.lb1.canonical_host_name}" ]
+  server_protocol = "HTTP"
+  server_pool     = "${opc_lbaas_server_pool.serverpool1.uri}"
+  policies = [
+    "${opc_lbaas_policy.load_balancing_mechanism_policy.uri}",
+  ]
 }
 
-
-resource "oci_load_balancer_listener" "lb-listener1" {
-  load_balancer_id         = oci_load_balancer.lb1.id
-  name                     = "http"
-  default_backend_set_name = oci_load_balancer_backend_set.lb-be1.name
-  hostname_names           = [oci_load_balancer_hostname.test_hostname1.name, oci_load_balancer_hostname.test_hostname2.name]
-  port                     = 80
-  protocol                 = "HTTP"
-
-  connection_configuration {
-    idle_timeout_in_seconds = "2"
+resource "<strong>opc_lbaas_policy</strong>" "load_balancing_mechanism_policy" {
+  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
+  name          = "roundrobin"
+  load_balancing_mechanism_policy {
+    load_balancing_mechanism = "round_robin"
   }
 }
+
+output "canonical_host_name" {
+  value = "${opc_lbaas_load_balancer.lb1.canonical_host_name}"
+}
+
+
