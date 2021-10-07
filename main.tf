@@ -205,9 +205,7 @@ variable "load_balancer_max_band" {
 
 
 resource "oci_load_balancer" "lb1" {
-  shape          = "10Mbps"
   compartment_id = var.compartment_ocid
-
   subnet_ids = [
     oci_core_subnet.tcb_subnet.id,
   ]
@@ -216,10 +214,11 @@ resource "oci_load_balancer" "lb1" {
   is_private                 = true
  # network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
 
-#shape_details {
-#      maximun_bandwidth_in_mbps = 10
-#      minimun_bandwidth_in_mbps = 10
-##  }
+shape          = "flexible"
+shape_details {
+      minimun_bandwidth_in_mbps = 10
+      maximun_bandwidth_in_mbps = 100
+  }
 }
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
