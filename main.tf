@@ -81,6 +81,15 @@ resource "oci_core_route_table" "tcb_route_table" {
   }
 }
 
+resource "oci_core_public_ip" "test_reserved_ip" {
+  compartment_id = "${var.compartment_ocid}"
+  lifetime       = "RESERVED"
+
+  lifecycle {
+    ignore_changes = [private_ip_id]
+  }
+}
+
 resource "oci_core_security_list" "tcb_security_list" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.tcb_vcn.id
