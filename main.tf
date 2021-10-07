@@ -44,3 +44,135 @@ data "oci_identity_availability_domain" "ad" {
   compartment_id = var.tenancy_ocid
   ad_number      = var.ad_region_mapping[var.region]
 }
+
+resource "oci_core_virtual_network" "tcb_vcn" {
+  cidr_block     = "10.1.0.0/16"
+  compartment_id = var.compartment_ocid
+  display_name   = "tcbVCN"
+  dns_label      = "tcbvcn"
+}
+
+resource "oci_core_subnet" "tcb_subnet" {
+  cidr_block        = "10.1.20.0/24"
+  display_name      = "tcbSubnet"
+  dns_label         = "tcbsubnet"
+  security_list_ids = [oci_core_security_list.tcb_security_list.id]
+  compartment_id    = var.compartment_ocid
+  vcn_id            = oci_core_virtual_network.tcb_vcn.id
+  route_table_id    = oci_core_route_table.tcb_route_table.id
+  dhcp_options_id   = oci_core_virtual_network.tcb_vcn.default_dhcp_options_id
+}
+
+resource "oci_core_internet_gateway" "tcb_internet_gateway" {
+  compartment_id = var.compartment_ocid
+  display_name   = "tcbIG"
+  vcn_id         = oci_core_virtual_network.tcb_vcn.id
+}
+
+resource "oci_core_route_table" "tcb_route_table" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_virtual_network.tcb_vcn.id
+  display_name   = "tcbRouteTable"
+
+  route_rules {
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_internet_gateway.tcb_internet_gateway.id
+  }
+}
+
+resource "oci_core_security_list" "tcb_security_list" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_virtual_network.tcb_vcn.id
+  display_name   = "tcbSecurityList"
+
+  egress_security_rules {
+    protocol    = "6"
+    destination = "0.0.0.0/0"
+  }
+
+  ingress_security_rules {
+    protocol = "6"
+    source   = "0.0.0.0/0"
+
+    tcp_options {
+      max = "22"
+      min = "22"
+    }
+  }
+
+  ingress_security_rules {
+    protocol = "6"
+    source   = "0.0.0.0/0"
+
+    tcp_options {
+      max = "80"
+      min = "80"
+    }
+  }
+}
+
+resource "oci_core_instance" "webserver1" {
+  availability_domain = data.oci_identity_availability_domain.ad.name
+  compartment_id      = var.compartment_ocid
+  display_name        = "webserver1"
+  shape               = "VM.Standard.E2.1.Micro"
+
+  create_vnic_details {
+    subnet_id        = oci_core_subnet.tcb_subnet.id
+    display_name     = "primaryvnic"
+    assign_public_ip = true
+    hostname_label   = "webserver1"
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+    user_data = base64encode(var.user-data)
+  }
+  
+  source_details {
+    source_type = "image"
+    source_id   = var.images[var.region]
+  }
+
+}
+
+resource "oci_core_instance" "webserver2" {
+  availability_domain = data.oci_identity_availability_domain.ad.name
+  compartment_id      = var.compartment_ocid
+  display_name        = "webserver2"
+  shape               = "VM.Standard.E2.1.Micro"
+
+  create_vnic_details {
+    subnet_id        = oci_core_subnet.tcb_subnet.id
+    display_name     = "primaryvnic"
+    assign_public_ip = true
+    hostname_label   = "webserver2"
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+    user_data = base64encode(var.user-data)
+  }
+  
+  source_details {
+    source_type = "image"
+    source_id   = var.images[var.region]
+  }
+}
+
+variable "user-data" {
+  default = <<EOF
+#!/bin/bash 
+sudo yum install httpd -y
+sudo apachectl start
+sudo systemctl enable httpd
+sudo firewall-cmd --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-service=http
+cd /var/www/html/
+sudo wget https://objectstorage.us-ashburn-1.oraclecloud.com/p/u8j40_AS-7pRypC5boQT24w5QFPDTy-0j27BWBOfmsxbERTiuDtJQBIqfcsOH81F/n/idqfa2z2mift/b/bootcamp-oci/o/oci-f-handson-modulo-compute-website-files.zip
+sudo unzip oci-f-handson-modulo-compute-website-files.zip
+sudo chown -R apache:apache /var/www/html
+sudo rm -rf oci-f-handson-modulo-compute-website-files.zip
+EOF
+}
