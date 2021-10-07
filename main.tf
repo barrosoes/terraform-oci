@@ -201,7 +201,7 @@ variable "load_balancer_mix_band" {
   default     = "10"
 }
 
-resource "oci_load_balancer" "lb" {
+resource "oci_load_balancer" "web-lb" {
   compartment_id = var.compartment_ocid
   display_name = "web-lb"
   shape          = "flexible"
@@ -219,7 +219,7 @@ resource "oci_load_balancer_backend" "lb-be1" {
   backendset_name  = oci_load_balancer_backend_set.lb-backend-s.name
   backup           = false
   drain            = false
-  load_balancer_id = oci_load_balancer.lb.id
+  load_balancer_id = oci_load_balancer.web-lb.id
   ip_address       = oci_core_instance.webserver1.private_ip
   port             = 80
   offline          = false
@@ -230,7 +230,7 @@ resource "oci_load_balancer_backend" "lb-be2" {
   backendset_name  = oci_load_balancer_backend_set.lb-backend-s.name
   backup           = false
   drain            = false
-  load_balancer_id = oci_load_balancer.lb.id
+  load_balancer_id = oci_load_balancer.web-lb.id
   ip_address       = oci_core_instance.webserver2.private_ip
   port             = 80
   offline          = false
@@ -255,7 +255,7 @@ resource "oci_load_balancer_backend_set" "lb-backend-s" {
 
 resource "oci_load_balancer_listener" "lb-listener" {
   default_backend_set_name = [oci_load_balancer_backend_set.lb-backend-s.name]
-  load_balancer_id         = [oci_load_balancer.lb-backend-s.id]
+  load_balancer_id         = [oci_load_balancer.web-lb.id]
   name                     = "lb-listener"
   hostname_names           = []
   port                     = 80
