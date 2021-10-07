@@ -204,7 +204,7 @@ resource "oci_load_balancer" "lb1" {
 }
 
 resource "opc_lbaas_server_pool" "serverpool1" {
-  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
+  load_balancer_id  = "oci_load_balancer.lb1.id"
   name          = "serverpool1"
 
   servers = ["144.22.243.98:8080", "132.226.163.197:8080"]
@@ -216,7 +216,7 @@ resource "opc_lbaas_server_pool" "serverpool1" {
 }
 
 resource "oci_load_balancer_listener" "listener1" {
-  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
+  load_balancer_id  = "oci_load_balancer.lb1.id"
   name          = "http-listener"
   balancer_protocol = "HTTP"
   port              = 80
