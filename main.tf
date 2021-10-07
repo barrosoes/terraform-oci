@@ -191,6 +191,16 @@ EOF
 
 /* Load Balancer */
 
+variable "load_balancer_min_band" {
+  description = "Load Balancer Min Band"
+  default     = "10"
+}
+
+variable "load_balancer_mix_band" {
+  description = "Load Balancer Max Band"
+  default     = "10"
+}
+
 resource "oci_load_balancer" "lb" {
   compartment_id = var.compartment_ocid
   display_name = "web-lb"
@@ -231,4 +241,5 @@ resource "oci_load_balancer_backend" "lb-be1" {
   offline          = false
   weight           = 1
 }
+
 
