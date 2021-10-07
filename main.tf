@@ -191,3 +191,68 @@ EOF
 
 }
 
+/* Load Balancer */
+
+resource "oci_load_balancer" "lb1" {
+  shape          = "100Mbps"
+  compartment_id = var.compartment_ocid
+
+  subnet_ids = [
+    oci_core_subnet.tcb_subnet.id,
+  ]
+
+  display_name               = "lb1"
+  is_private                 = true
+  network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
+}
+
+resource "oci_load_balancer_backend_set" "lb-bes1" {
+  name             = "lb-bes1"
+  load_balancer_id = oci_load_balancer.lb1.id
+  policy           = "ROUND_ROBIN"
+
+  health_checker {
+    port                = "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    url_path            = "/"
+  }
+
+  session_persistence_configuration {
+    cookie_name      = "lb-session1"
+    disable_fallback = true
+  }
+}
+
+resource "oci_load_balancer_backend_set" "lb-bes2" {
+  name             = "lb-bes2"
+  load_balancer_id = oci_load_balancer.lb1.id
+  policy           = "ROUND_ROBIN"
+
+  health_checker {
+    port                = "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    url_path            = "/"
+  }
+
+  lb_cookie_session_persistence_configuration {
+    cookie_name        = "example_cookie"
+    domain             = "example.oracle.com"
+    is_http_only       = false
+    is_secure          = false
+    max_age_in_seconds = 10
+    path               = "/example"
+    disable_fallback   = true
+  }
+}
+
+resource "oci_core_network_security_group" "test_network_security_group" {
+  #Required
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.vcn1.id
+}
+
+output "lb_private_ip" {
+  value = [oci_load_balancer.lb1.ip_address_details]
+}
