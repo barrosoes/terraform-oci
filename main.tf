@@ -228,19 +228,6 @@ resource "oci_load_balancer_backend_set" "lb-bes1" {
   }
 }
 
-resource "oci_load_balancer_backend_set" "lb-bes2" {
-  name             = "lb-bes2"
-  load_balancer_id = oci_load_balancer.lb2.id
-  policy           = "ROUND_ROBIN"
-
-  health_checker {
-    port                = "80"
-    protocol            = "TCP"
-    response_body_regex = ".*"
-    url_path            = "/"
-  }
-}
-
 resource "oci_load_balancer_hostname" "test_hostname1" {
   #Required
   hostname         = "app.example.com"
