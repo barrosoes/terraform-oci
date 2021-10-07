@@ -212,12 +212,11 @@ resource "oci_load_balancer" "lb1" {
 
   display_name               = "lb1"
   is_private                 = true
- # network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
 
 shape          = "flexible"
 shape_details {
-      minimun_bandwidth_in_mbps = 10
-      maximun_bandwidth_in_mbps = 100
+      minimum_bandwidth_in_mbps = 10
+      maximum_bandwidth_in_mbps = 100
   }
 }
 
