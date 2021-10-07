@@ -202,6 +202,18 @@ resource "oci_load_balancer" "lb1" {
   ip_network        = "/Compute-${var.domain}/${var.user}/ipnet1"
 }
 
+resource "opc_lbaas_server_pool" "serverpool1" {
+  load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
+  name          = "serverpool1"
+
+  servers = ["144.22.243.98:8080", "132.226.163.197:8080"]
+
+  health_check {
+    type = "http"
+    path = "/healthcheck"
+  }
+}
+
 resource "oci_load_balancer_listener" "listener1" {
   load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
   name          = "http-listener"
