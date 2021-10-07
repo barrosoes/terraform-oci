@@ -205,7 +205,7 @@ variable "load_balancer_mix_band" {
 /* Load Balancer */
 
 resource "oci_load_balancer" "lb1" {
-  shape          = "100Mbps"
+  shape          = "flexible"
   compartment_id = var.compartment_ocid
 
   subnet_ids = [
