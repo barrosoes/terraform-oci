@@ -267,14 +267,3 @@ resource "oci_load_balancer_backend" "lb-be1" {
   weight           = 1
 }
 
-resource "oci_load_balancer_backend" "lb-be2" {
-  load_balancer_id = oci_load_balancer.lb2.id
-  backendset_name  = oci_load_balancer_backend_set.lb-bes2.name
-  ip_address       = oci_core_instance.webserver2.private_ip
-  port             = 80
-  backup           = false
-  drain            = false
-  offline          = false
-  weight           = 1
-}
-
