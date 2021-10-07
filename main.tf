@@ -195,12 +195,12 @@ EOF
 
 variable "load_balancer_min_band" {
   description = "Load Balancer Min Band"
-  default     = 10Mbps-Micro
+  default     = "10Mbps-Micro"
 }
 
 variable "load_balancer_max_band" {
   description = "Load Balancer Max Band"
-  default     = 10Mbps-Micro
+  default     = "10Mbps-Micro"
 }
 
 
