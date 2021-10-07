@@ -194,42 +194,56 @@ EOF
 /* Load Balancer */
 
 resource "oci_load_balancer" "lb1" {
-  name        = "lb1"
-  region      = "sa-saopaulo-1"
-  description = "Meu Load Balancer"
-  policy      = "ROUND_ROBIN"
-  scheme      = "INTERNET_FACING"
-  permitted_methods = ["GET", "HEAD", "POST"]
-  ip_network        = "/Compute-${var.domain}/${var.user}/ipnet1"
-}
+  shape          = "100Mbps"
+  compartment_id = var.compartment_ocid
 
-resource "opc_lbaas_server_pool" "serverpool1" {
-  load_balancer_id  = "oci_load_balancer.lb1.id"
-  name          = "serverpool1"
+  subnet_ids = [
+    oci_core_subnet.tcb_subnet.id,
+  ]
 
-  servers = ["144.22.243.98:8080", "132.226.163.197:8080"]
-
-  health_check {
-    type = "http"
-    path = "/healthcheck"
+  display_name = "lb1"
+  reserved_ips {
+    id = "${oci_core_public_ip.test_reserved_ip.id}"
   }
 }
 
-resource "oci_load_balancer_listener" "listener1" {
-  load_balancer_id  = "oci_load_balancer.lb1.id"
-  name          = "http-listener"
-  balancer_protocol = "HTTP"
-  port              = 80
-  virtual_hosts     = [ "${opc_lbaas_load_balancer.lb1.canonical_host_name}" ]
-  server_protocol = "HTTP"
-  server_pool     = "${opc_lbaas_server_pool.serverpool1.uri}"
-  policies = [
-    "${opc_lbaas_policy.load_balancing_mechanism_policy.uri}",
-  ]
+resource "oci_load_balancer_backend_set" "lb-bes1" {
+  name             = "lb-bes1"
+  load_balancer_id = oci_load_balancer.lb1.id
+  policy           = "ROUND_ROBIN"
+
+  health_checker {
+    port                = "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    url_path            = "/"
+  }
 }
 
-output "canonical_host_name" {
-  value = "${opc_lbaas_load_balancer.lb1.canonical_host_name}"
+resource "oci_load_balancer_backend_set" "lb-bes2" {
+  name             = "lb-bes1"
+  load_balancer_id = oci_load_balancer.lb1.id
+  policy           = "ROUND_ROBIN"
+
+  health_checker {
+    port                = "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    url_path            = "/"
+  }
 }
 
+resource "oci_load_balancer_listener" "lb-listener1" {
+  load_balancer_id         = oci_load_balancer.lb1.id
+  name                     = "http"
+  default_backend_set_name = oci_load_balancer_backend_set.lb-bes1.name
+  hostname_names           = [oci_load_balancer_hostname.webserver1.name, oci_load_balancer_hostname.webserver2.name]
+  port                     = 80
+  protocol                 = "HTTP"
+  rule_set_names           = [oci_load_balancer_rule_set.test_rule_set.name]
+
+  connection_configuration {
+    idle_timeout_in_seconds = "2"
+  }
+}
 
