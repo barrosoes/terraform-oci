@@ -233,13 +233,13 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
   }
 }
 
-resource "oci_load_balancer_hostname" "webserver1" {
+resource "oci_load_balancer_hostname" "hostname1" {
   hostname         = "app.example.com"
   load_balancer_id = oci_load_balancer.lb1.id
   name             = "hostname1"
 }
 
-resource "oci_load_balancer_hostname" "webserver2" {
+resource "oci_load_balancer_hostname" "hostname2" {
   hostname         = "app2.example.com"
   load_balancer_id = oci_load_balancer.lb1.id
   name		   = "hostname2"	
@@ -248,7 +248,7 @@ resource "oci_load_balancer_listener" "lb-listener1" {
   load_balancer_id         = oci_load_balancer.lb1.id
   name                     = "http"
   default_backend_set_name = oci_load_balancer_backend_set.lb-bes1.name
-  hostname_names           = [oci_load_balancer_hostname.webserver1.name, oci_load_balancer_hostname.webserver2.name]
+  hostname_names           = [oci_load_balancer_hostname.hostname1.name, oci_load_balancer_hostname.hostname2.name]
   port                     = 80
   protocol                 = "HTTP"
 
