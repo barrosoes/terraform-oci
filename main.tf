@@ -305,6 +305,6 @@ resource "oci_load_balancer_hostname" "test_hostname1" {
 resource "oci_load_balancer_hostname" "test_hostname2" {
   #Required
   hostname         = "app2.example.com"
-  load_balancer_id = oci_load_balancer.lb1.id
+  load_balancer_id = oci_load_balancer.lb2.id
   name             = "hostname2"
 }
