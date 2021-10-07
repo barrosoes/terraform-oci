@@ -283,7 +283,7 @@ resource "oci_load_balancer_backend" "lb-be1" {
 }
 
 resource "oci_load_balancer_backend" "lb-be2" {
-  load_balancer_id = oci_load_balancer.lb2.id
+  load_balancer_id = oci_load_balancer.lb1.id
   backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
   ip_address       = oci_core_instance.webserver2.private_ip
   port             = 80
