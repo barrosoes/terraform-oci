@@ -209,7 +209,7 @@ resource "<strong>opc_lbaas_server_pool</strong>" "serverpool1" {
   vnic_set = "/Compute-${var.domain}/${var.user}/vnicset1"
 }
 
-resource "<strong>opc_lbaas_listener</strong>" "listener1" {
+resource "oci_load_balancer_listener" "listener1" {
   load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
   name          = "http-listener"
   balancer_protocol = "HTTP"
@@ -222,7 +222,7 @@ resource "<strong>opc_lbaas_listener</strong>" "listener1" {
   ]
 }
 
-resource "<strong>opc_lbaas_policy</strong>" "load_balancing_mechanism_policy" {
+resource "opc_lbaas_policy" "load_balancing_mechanism_policy" {
   load_balancer = "${opc_lbaas_load_balancer.lb1.id}"
   name          = "roundrobin"
   load_balancing_mechanism_policy {
