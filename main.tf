@@ -290,11 +290,3 @@ resource "oci_load_balancer_backend" "lb-be2" {
     http_large_header_size_in_kb   = 8
   }
 
-  load_balancer_id = oci_load_balancer.lb1.id {
-  name             = "example_rule_set_name"
-}
-
-output "lb_public_ip" {
-  value = [oci_load_balancer.lb1.ip_address_details]
-}
-
