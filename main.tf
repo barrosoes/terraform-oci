@@ -195,17 +195,17 @@ EOF
 
 variable "load_balancer_min_band" {
   description = "Load Balancer Min Band"
-  default     = "10Mbps-Micro"
+  default     = "10Mbps"
 }
 
 variable "load_balancer_max_band" {
   description = "Load Balancer Max Band"
-  default     = "10Mbps-Micro"
+  default     = "10Mbps"
 }
 
 
 resource "oci_load_balancer" "lb1" {
-  shape          = "flexible"
+  shape          = "10Mbps"
   compartment_id = var.compartment_ocid
 
   subnet_ids = [
@@ -216,10 +216,10 @@ resource "oci_load_balancer" "lb1" {
   is_private                 = true
  # network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
 
-shape_details {
-      maximun_bandwidth_in_mbps = 10
-      minimun_bandwidth_in_mbps = 10
-    }
+#shape_details {
+#      maximun_bandwidth_in_mbps = 10
+#      minimun_bandwidth_in_mbps = 10
+#    }
 }
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
