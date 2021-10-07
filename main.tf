@@ -199,7 +199,8 @@ resource "oci_load_balancer" "lb1" {
     oci_core_subnet.tcb_subnet.id,
   ]
 
-  display_name               = "lb-webservers"
+  display_name = "lb-webservers"
+  network_security_group_ids = [oci_core_network_security_group.lb1WebSecurityGroup.id]
   reserved_ips {
     id = "${oci_core_public_ip.test_reserved_ip.id}"
   }  
@@ -279,10 +280,10 @@ resource "oci_load_balancer_listener" "lb-listener1" {
   }
 }
 
-resource "oci_core_network_security_group" "test_network_security_group" {
-  compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_virtual_network.tcb_vcn.id
-}
+#resource "oci_core_network_security_group" "test_network_security_group" {
+#  compartment_id = var.compartment_ocid
+#  vcn_id         = oci_core_virtual_network.tcb_vcn.id
+#}
 
 
 output "lb_private_ip" {
