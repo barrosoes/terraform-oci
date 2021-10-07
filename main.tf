@@ -203,7 +203,7 @@ resource "oci_load_balancer" "lb1" {
 
   display_name               = "lb1"
   is_private                 = true
-  network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
+ # network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
 }
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
