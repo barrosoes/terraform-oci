@@ -215,7 +215,3 @@ variable "load_balancer_shape_details_minimum_bandwidth_in_mbps" {
   default = 10
 }
 
-shape_details {
-    maximum_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
-    minimum_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
-  }
