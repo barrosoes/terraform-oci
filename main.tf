@@ -189,29 +189,46 @@ chown -R apache:apache /var/www/html
 echo '################### webserver userdata ends #######################'
 EOF
 
-}
-
 /* Load Balancer */
 
-resource "oci_load_balancer" "lb1" {
-  shape          = "10Mbps"
+resource "oci_load_balancer" "lb" {
   compartment_id = var.compartment_ocid
-
+  display_name = "web-lb"
+  shape          = "flexible"
   subnet_ids = [
-    oci_core_subnet.tcbsubnet.id,
+    oci_core_subnet.tcb_subnet.id,
   ]
 
-  display_name = "lb1"
-  reserved_ips {
-    id = "${oci_core_public_ip.test_reserved_ip.id}"
+  shape_details {
+      maximun_bandwidth_in_mbps = var.load_balancer_max_band
+      minimun_bandwidth_in_mbps = var.load_balancer_min_band
+    }
+}
+
+resource "oci_load_balancer_backend_set" "lb-backend" {
+  health_checker {
+    interval_ms		= "10000"
+    port		= "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    retries		= "3"
+    return_code		= "200"
+    timeout_in_millis	= "3000"
+    url_path            = "/"
   }
+  load_balancer_id = oci_load_balancer.Load_Balancer.id
+  name		   = "lb-backend"
+  policy           = "ROUND_ROBIN"
 }
 
-variable "load_balancer_shape_details_maximum_bandwidth_in_mbps" {
-  default = 10
-}
-
-variable "load_balancer_shape_details_minimum_bandwidth_in_mbps" {
-  default = 10
+resource "oci_load_balancer_backend" "lb-be1" {
+  backendset_name  = oci_load_balancer_backend_set.lb-backend.name
+  backup           = false
+  drain            = false
+  load_balancer_id = oci_load_balancer.lb.id
+  ip_address       = oci_core_instance.webserver1.private_ip
+  port             = 80
+  offline          = false
+  weight           = 1
 }
 
