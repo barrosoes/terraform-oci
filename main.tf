@@ -193,7 +193,7 @@ EOF
 
 /* Load Balancer */
 
-resource "<strong>opc_lbaas_load_balancer</strong>" "lb1" {
+resource "oci_load_balancer" "lb1" {
   name        = "lb1"
   region      = "sa-saopaulo-1"
   description = "Meu Load Balancer"
