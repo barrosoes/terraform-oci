@@ -194,7 +194,7 @@ EOF
 /* Load Balancer */
 
 resource "oci_load_balancer" "lb1" {
-  shape          = "100Mbps"
+  shape          = "10Mbps"
   compartment_id = var.compartment_ocid
 
   subnet_ids = [
