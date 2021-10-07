@@ -196,7 +196,7 @@ variable "load_balancer_min_band" {
   default     = "10"
 }
 
-variable "load_balancer_mix_band" {
+variable "load_balancer_max_band" {
   description = "Load Balancer Max Band"
   default     = "10"
 }
@@ -233,8 +233,8 @@ resource "oci_load_balancer" "flex_lb" {
   ]
 
 shape_details {
-      maximun_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
-      minimun_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
+      maximun_bandwidth_in_mbps = var.load_balancer_max_band
+      minimun_bandwidth_in_mbps = var.load_balancer_min_band
     }
 
 display_name = "flex_lb"
