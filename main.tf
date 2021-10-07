@@ -277,3 +277,10 @@ resource "oci_load_balancer_backend" "lb-be2" {
   offline          = false
   weight           = 1
 }
+
+resource "oci_load_balancer_hostname" "test_hostname1" {
+  #Required
+  hostname         = "app.example.com"
+  load_balancer_id = oci_load_balancer.lb1.id
+  name             = "hostname1"
+}
