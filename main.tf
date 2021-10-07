@@ -127,9 +127,6 @@ resource "oci_core_instance" "webserver1" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-  }
-  
-  metadata = {
     user_data = base64encode(var.user-data)
   }
   
@@ -155,9 +152,6 @@ resource "oci_core_instance" "webserver2" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-  }
-  
-  metadata = {
     user_data = base64encode(var.user-data)
   }
   
