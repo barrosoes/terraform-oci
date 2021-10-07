@@ -223,13 +223,30 @@ resource "oci_load_balancer" "lb1" {
   reserved_ips {
     id = "${oci_core_public_ip.test_reserved_ip.id}"
   }
-
-#shape_details {
-#      maximun_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
-#      minimun_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
-#    }
 }
 
+variable "load_balancer_shape_details_maximum_bandwidth_in_mbps" {
+  default = 10
+}
+
+variable "load_balancer_shape_details_minimum_bandwidth_in_mbps" {
+  default = 10
+}
+
+resource "oci_load_balancer" "flex_lb" {
+  shape          = "flexible"
+  compartment_id = var.compartment_ocid
+
+  subnet_ids = [ oci_core_subnet.tcb_subnet.id,
+  ]
+
+shape_details {
+      maximun_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
+      minimun_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
+    }
+
+display_name = "flex_lb"
+}
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
   name             = "lb-bes1"
