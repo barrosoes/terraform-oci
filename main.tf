@@ -193,34 +193,6 @@ EOF
 
 /* Load Balancer */
 
-resource "oci_load_balancer_backend_set" "lb-bes1" {
-  name             = "lb-bes1"
-  load_balancer_id = oci_load_balancer.lb1.id
-  policy           = "ROUND_ROBIN"
-
-  health_checker {
-    port                = "80"
-    protocol            = "HTTP"
-    response_body_regex = ".*"
-    url_path            = "/"
-  }
-}
-
-resource "oci_load_balancer_hostname" "test_hostname1" {
-  #Required
-  hostname         = "app.example.com"
-  load_balancer_id = oci_load_balancer.lb1.id
-  name             = "hostname1"
-}
-
-resource "oci_load_balancer_hostname" "test_hostname2" {
-  #Required
-  hostname         = "app2.example.com"
-  load_balancer_id = oci_load_balancer.lb1.id
-  name             = "hostname2"
-}
-
-
 resource "oci_load_balancer_listener" "lb-listener1" {
   load_balancer_id         = oci_load_balancer.lb1.id
   name                     = "http"
