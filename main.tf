@@ -250,7 +250,7 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
 resource "oci_core_network_security_group" "test_network_security_group" {
   #Required
   compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.vcn1.id
+  vcn_id         = oci_core_vcn.tcb_vcn.id
 }
 
 output "lb_private_ip" {
