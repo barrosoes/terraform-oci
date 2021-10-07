@@ -242,4 +242,15 @@ resource "oci_load_balancer_backend" "lb-be1" {
   weight           = 1
 }
 
+resource "oci_load_balancer_listener" "lb-listener" {
+  default_backend_set_name = [oci_load_balancer_backend_set.lb-backend.name]
+  load_balancer_id         = oci_load_balancer.lb.id
+  name                     = "lb-listener"
+  hostname_names           = []
+  port                     = 80
+  protocol                 = "HTTP"
 
+  connection_configuration {
+    idle_timeout_in_seconds = "20"
+  }
+}
