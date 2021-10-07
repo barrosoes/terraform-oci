@@ -217,10 +217,6 @@ resource "oci_load_balancer" "lb1" {
  # network_security_group_ids = [oci_core_network_security_group.test_network_security_group.id]
 
 }
-  shape_details {
-     maximun_bandwidth_in_mbps = 10
-     minimun_bandwidth_in_mbps = 10
-    }
 
 resource "oci_load_balancer_backend_set" "lb-bes1" {
   name             = "lb-bes1"
