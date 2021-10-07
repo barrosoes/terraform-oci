@@ -211,7 +211,11 @@ resource "oci_load_balancer" "lb1" {
   ]
 
   display_name               = "lb1"
-  is_private                 = true
+  reserved_ips {
+    id = "${oci_core_public_ip.test_reserved_ip.id}"
+  }  
+
+#is_private                 = true
 
 shape          = "flexible"
 shape_details {
