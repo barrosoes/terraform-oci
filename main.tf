@@ -225,8 +225,8 @@ resource "oci_load_balancer" "lb1" {
   }
 
 shape_details {
-      maximun_bandwidth_in_mbps = var.load_balancer_max_band
-      minimun_bandwidth_in_mbps = var.load_balancer_min_band
+      maximun_bandwidth_in_mbps = var.load_balancer_shape_details_maximum_bandwidth_in_mbps
+      minimun_bandwidth_in_mbps = var.load_balancer_shape_details_minimum_bandwidth_in_mbps
     }
 }
 
