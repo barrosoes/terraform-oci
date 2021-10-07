@@ -216,7 +216,7 @@ resource "oci_load_balancer" "lb" {
 }
 
 resource "oci_load_balancer_backend" "lb-be1" {
-  backendset_name  = oci_load_balancer_backend_set.lb-backend.name
+  backendset_name  = oci_load_balancer_backend_set.lb-backend-s.name
   backup           = false
   drain            = false
   load_balancer_id = oci_load_balancer.lb.id
@@ -227,7 +227,7 @@ resource "oci_load_balancer_backend" "lb-be1" {
 }
 
 resource "oci_load_balancer_backend" "lb-be2" {
-  backendset_name  = oci_load_balancer_backend_set.lb-backend.name
+  backendset_name  = oci_load_balancer_backend_set.lb-backend-s.name
   backup           = false
   drain            = false
   load_balancer_id = oci_load_balancer.lb.id
@@ -237,7 +237,7 @@ resource "oci_load_balancer_backend" "lb-be2" {
   weight           = 1
 }
 
-resource "oci_load_balancer_backend_set" "lb-backend" {
+resource "oci_load_balancer_backend_set" "lb-backend-s" {
   health_checker {
     interval_ms         = "10000"
     port                = "80"
@@ -249,13 +249,13 @@ resource "oci_load_balancer_backend_set" "lb-backend" {
     url_path            = "/"
   }
   load_balancer_id = oci_load_balancer.Load_Balancer.id
-  name             = "lb-backend"
+  name             = "lb-backend-s"
   policy           = "ROUND_ROBIN"
 }
 
 resource "oci_load_balancer_listener" "lb-listener" {
-  default_backend_set_name = [oci_load_balancer_backend_set.lb-backend.name]
-  load_balancer_id         = oci_load_balancer.lb.id
+  default_backend_set_name = [oci_load_balancer_backend_set.lb-backend-s.name]
+  load_balancer_id         = [oci_load_balancer.lb-backend-s.id]
   name                     = "lb-listener"
   hostname_names           = []
   port                     = 80
