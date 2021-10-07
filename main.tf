@@ -289,7 +289,7 @@ resource "oci_load_balancer_listener" "lb-listener1" {
 
 resource "oci_core_network_security_group" "test_network_security_group" {
   compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.vcn1.id
+  vcn_id         = oci_core_virtual_network.tcb_vcn.id
 }
 
 output "lb_private_ip" {
