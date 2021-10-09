@@ -52,34 +52,15 @@ resource "oci_core_virtual_network" "tcb_vcn" {
   dns_label      = "tcbvcn"
 }
 
-resource "oci_core_subnet" "tcb_subnet1" {
-  cidr_block        = "10.1.10.0/24"
-  display_name      = "tcbSubnet1"
-  dns_label         = "tcbsubnet1"
-  security_list_ids = [oci_core_security_list.tcb_security_list.id]
-  compartment_id    = var.compartment_ocid
-  vcn_id            = oci_core_virtual_network.tcb_vcn.id
-  route_table_id    = oci_core_route_table.tcb_route_table.id
-  dhcp_options_id   = oci_core_virtual_network.tcb_vcn.default_dhcp_options_id
-
-  provisioner "local-exec" {
-    command = "sleep 5"
-  }
-}
-
-resource "oci_core_subnet" "tcb_subnet2" {
+resource "oci_core_subnet" "tcb_subnet" {
   cidr_block        = "10.1.20.0/24"
-  display_name      = "tcbSubnet2"
-  dns_label         = "tcbsubnet2"
+  display_name      = "tcbSubnet"
+  dns_label         = "tcbsubnet"
   security_list_ids = [oci_core_security_list.tcb_security_list.id]
   compartment_id    = var.compartment_ocid
   vcn_id            = oci_core_virtual_network.tcb_vcn.id
   route_table_id    = oci_core_route_table.tcb_route_table.id
   dhcp_options_id   = oci_core_virtual_network.tcb_vcn.default_dhcp_options_id
-
-  provisioner "local-exec" {
-    command = "sleep 5"
-  }
 }
 
 resource "oci_core_internet_gateway" "tcb_internet_gateway" {
@@ -215,8 +196,7 @@ EOF
 resource "oci_load_balancer" "lb1" {
   compartment_id = var.compartment_ocid
   subnet_ids = [
-    oci_core_subnet.tcb_subnet1.id,
-    oci_core_subnet.tcb_subnet2.id,
+    oci_core_subnet.tcb_subnet.id,
   ]
 
   display_name = "lb-webservers"
@@ -249,11 +229,9 @@ resource "oci_load_balancer_backend_set" "lb-bes1" {
   }
 }
 
-resource "oci_load_balancer_backend" "lb-be1" {
-  name             = "lb-be1"
+resource "oci_load_balancer_backend_set" "lb-bes2" {
+  name             = "lb-bes2"
   load_balancer_id = oci_load_balancer.lb1.id
-  backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
-  ip_address       = oci_core_instance.webserver1.private_ip
   policy           = "ROUND_ROBIN"
 
   health_checker {
@@ -262,21 +240,6 @@ resource "oci_load_balancer_backend" "lb-be1" {
     response_body_regex = ".*"
     url_path            = "/"
   }
-
-resource "oci_load_balancer_backend" "lb-be2" {
-  name             = "lb-be2"
-  load_balancer_id = oci_load_balancer.lb1.id
-  backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
-  ip_address       = oci_core_instance.webserver2.private_ip
-  policy           = "ROUND_ROBIN"
-
-  health_checker {
-    port                = "80"
-    protocol            = "HTTP"
-    response_body_regex = ".*"
-    url_path            = "/"
-  }
-
 
   lb_cookie_session_persistence_configuration {
     cookie_name        = "example_cookie"
@@ -290,12 +253,14 @@ resource "oci_load_balancer_backend" "lb-be2" {
 }
 
 resource "oci_load_balancer_hostname" "test_hostname1" {
+  #Required
   hostname         = "app.example.com"
   load_balancer_id = oci_load_balancer.lb1.id
   name             = "hostname1"
 }
 
 resource "oci_load_balancer_hostname" "test_hostname2" {
+  #Required
   hostname         = "app2.example.com"
   load_balancer_id = oci_load_balancer.lb1.id
   name             = "hostname2"
@@ -313,6 +278,12 @@ resource "oci_load_balancer_listener" "lb-listener1" {
     idle_timeout_in_seconds = "2"
   }
 }
+
+#resource "oci_core_network_security_group" "test_network_security_group" {
+#  compartment_id = var.compartment_ocid
+#  vcn_id         = oci_core_virtual_network.tcb_vcn.id
+#}
+
 
 output "lb_private_ip" {
   value = [oci_load_balancer.lb1.ip_address_details]
