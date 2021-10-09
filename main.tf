@@ -298,7 +298,7 @@ resource "oci_load_balancer_listener" "lb-listener1" {
 #}
 
 
-output "lb_private_ip" {
+output "lb_public_ip" {
   value = [oci_load_balancer.lb1.ip_address_details]
 }
 
