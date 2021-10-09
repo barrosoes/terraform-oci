@@ -140,7 +140,7 @@ resource "oci_core_instance" "webserver1" {
   shape               = "VM.Standard.E2.1.Micro"
 
   create_vnic_details {
-    subnet_id        = oci_core_subnet.tcb_subnet.id
+    subnet_id        = oci_core_subnet.tcb_subnet1.id
     display_name     = "primaryvnic"
     assign_public_ip = true
     hostname_label   = "webserver1"
@@ -165,7 +165,7 @@ resource "oci_core_instance" "webserver2" {
   shape               = "VM.Standard.E2.1.Micro"
 
   create_vnic_details {
-    subnet_id        = oci_core_subnet.tcb_subnet.id
+    subnet_id        = oci_core_subnet.tcb_subnet2.id
     display_name     = "primaryvnic"
     assign_public_ip = true
     hostname_label   = "webserver2"
