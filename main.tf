@@ -240,19 +240,6 @@ resource "oci_load_balancer_backend_set" "lb-bes1" {
     cookie_name      = "lb-session1"
     disable_fallback = true
   }
-}
-
-resource "oci_load_balancer_backend_set" "lb-bes2" {
-  name             = "lb-bes2"
-  load_balancer_id = oci_load_balancer.lb1.id
-  policy           = "ROUND_ROBIN"
-
-  health_checker {
-    port                = "80"
-    protocol            = "HTTP"
-    response_body_regex = ".*"
-    url_path            = "/"
-  }
 
   lb_cookie_session_persistence_configuration {
     cookie_name        = "example_cookie"
@@ -263,6 +250,28 @@ resource "oci_load_balancer_backend_set" "lb-bes2" {
     path               = "/example"
     disable_fallback   = true
   }
+}
+
+resource "oci_load_balancer_backend" "lb-be1" {
+  load_balancer_id = oci_load_balancer.lb1.id
+  backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
+  ip_address       = oci_core_instance.webserver1.private_ip
+  port             = 80
+  backup           = false
+  drain            = false
+  offline          = false
+  weight           = 1
+}
+
+resource "oci_load_balancer_backend" "lb-be2" {
+  load_balancer_id = oci_load_balancer.lb1.id
+  backendset_name  = oci_load_balancer_backend_set.lb-bes1.name
+  ip_address       = oci_core_instance.webserver2.private_ip
+  port             = 80
+  backup           = false
+  drain            = false
+  offline          = false
+  weight           = 1
 }
 
 resource "oci_load_balancer_hostname" "test_hostname1" {
