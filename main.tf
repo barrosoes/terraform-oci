@@ -235,11 +235,6 @@ resource "oci_load_balancer_backend_set" "lb-bes1" {
     url_path            = "/"
   }
 
-  session_persistence_configuration {
-    cookie_name      = "lb-session1"
-    disable_fallback = true
-  }
-
   lb_cookie_session_persistence_configuration {
     cookie_name        = "example_cookie"
     domain             = "example.oracle.com"
