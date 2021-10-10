@@ -33,17 +33,6 @@ resource "oci_load_balancer_backend_set" "lb-bes" {
     disable_fallback = true
   }
 
-  lb_cookie_session_persistence_configuration {
-    cookie_name        = "example_cookie"
-    domain             = "example.oracle.com"
-    is_http_only       = false
-    is_secure          = false
-    max_age_in_seconds = 10
-    path               = "/example"
-    disable_fallback   = true
-  }
-}
-
 resource "oci_load_balancer_backend" "lb-be1" {
   load_balancer_id = oci_load_balancer.lb.id
   backendset_name  = oci_load_balancer_backend_set.lb-bes.name
