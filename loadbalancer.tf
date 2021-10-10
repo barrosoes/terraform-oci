@@ -56,6 +56,10 @@ resource "oci_load_balancer_backend" "lb-be2" {
 }
 
 resource "oci_load_balancer_listener" "lb-listener" {
+  connection_configuration {
+    backend_tcp_proxy_protocol_version = "0"
+    idle_timeout_in_seconds = "60"
+  }
   load_balancer_id         = oci_load_balancer.lb.id
   name                     = "http"
   default_backend_set_name = oci_load_balancer_backend_set.lb-bes.name
@@ -63,7 +67,4 @@ resource "oci_load_balancer_listener" "lb-listener" {
   port                     = 80
   protocol                 = "HTTP"
 
-  connection_configuration {
-    idle_timeout_in_seconds = "2"
-  }
 }
