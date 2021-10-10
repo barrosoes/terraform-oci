@@ -28,11 +28,6 @@ resource "oci_load_balancer_backend_set" "lb-bes" {
     url_path            = "/"
   }
 
-  session_persistence_configuration {
-    cookie_name      = "lb-session1"
-    disable_fallback = true
-  }
-
 resource "oci_load_balancer_backend" "lb-be1" {
   load_balancer_id = oci_load_balancer.lb.id
   backendset_name  = oci_load_balancer_backend_set.lb-bes.name
